@@ -38,7 +38,8 @@ class Value:
 		net = Activation('relu')(net)
 
 		# More layers here
-		# ...
+		net = Dense(64, activation = 'relu')(net)
+		net = Dense(32, activation = 'relu')(net)
 
 		# Add final output layer to produce action values (Q values)
 		Q_values = Dense(1, name = 'q_values')(net)
