@@ -4,7 +4,7 @@ from keras.layers import Input, Dense, Lambda
 
 
 """Policy model"""
-class Actor:
+class Policy:
 
 	def __init__(self, state_size, action_size, action_dim_min, action_dim_max):
 		"""Initialize parameters and build model
@@ -30,19 +30,19 @@ class Actor:
 		states = Input((self.state_size,), name = 'states')
 
 		# Hidden layers
-		net = Dense(512, activation = 'relu')(states)
-		net = Dense(128, activation = 'relu')(net)
+		net = Dense(32, activation = 'relu')(states)
+		net = Dense(64, activation = 'relu')(net)
 		net = Dense(32, activation = 'relu')(net)
 
 		# Final output layer with sigmoide layer
-		raw_actions = Dense(self.action_size, activation = 'relu', name = 'raw_actions')(net)
+		raw_actions = Dense(self.action_size, activation = 'sigmoid', name = 'raw_actions')(net)
 
 		# Scale [0, 1] output for each action dimension to proper range
 		actions = Lambda(lambda action: action * self.action_range + self.action_dim_min, 
 						 name = 'actions')(raw_actions)
 
 		# Create our Keras model
-		self.model = models.Model(inputs = states, output = actions)
+		self.model = models.Model(inputs = states, outputs = actions)
 
 		# Define loss function using action value (Q value) gradients
 		action_gradients = Input((self.action_size,))
@@ -54,11 +54,11 @@ class Actor:
 
 		# Define optimizers and training function
 		optimizer = optimizers.Adam()
-		update_op = optimizer.get_updates(self.model.trainable_weights, loss = loss)
+		updates_op = optimizer.get_updates(params=self.model.trainable_weights, loss=loss)
 
 		self.train_func = K.function(
 			inputs = [self.model.input, action_gradients, K.learning_phase()],
-			outpus = [],
+			outputs = [],
 			updates = updates_op
 		)
 
