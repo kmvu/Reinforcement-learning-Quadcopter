@@ -30,11 +30,11 @@ class Policy:
 		states = Input((self.state_size,), name = 'states')
 
 		# Hidden layers
-		net = Dense(32, activation = 'relu')(states)
+		net = Dense(64, activation = 'relu')(states)
+		net = Dense(128, activation = 'relu')(net)
 		net = Dense(64, activation = 'relu')(net)
-		net = Dense(32, activation = 'relu')(net)
 
-		# Final output layer with sigmoide layer
+		# Final output layer with sigmoid layer
 		raw_actions = Dense(self.action_size, activation = 'sigmoid', name = 'raw_actions')(net)
 
 		# Scale [0, 1] output for each action dimension to proper range
@@ -47,10 +47,6 @@ class Policy:
 		# Define loss function using action value (Q value) gradients
 		action_gradients = Input((self.action_size,))
 		loss = K.mean(-action_gradients * actions)
-
-		# More losses here (e.g. from regulizers)
-		# ...
-
 
 		# Define optimizers and training function
 		optimizer = optimizers.Adam()

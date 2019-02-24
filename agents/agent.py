@@ -41,9 +41,9 @@ class Agent():
         self.target_actor.model.set_weights(self.local_actor.model.get_weights())
 
         # Add some noise components and process
-        self.exploration_mu = 0.0
-        self.exploration_theta = 0.15
-        self.exploration_sigma = 0.2
+        self.exploration_mu = 0.1
+        self.exploration_theta = 0.3
+        self.exploration_sigma = 0.25
 
         self.noise = OUNoise(self.action_size, self.exploration_mu,
                              self.exploration_theta, self.exploration_sigma)
@@ -54,7 +54,7 @@ class Agent():
         self.memory = ReplayBuffer(self.buffer_size, self.batch_size)
 
         # Algorithm parameters
-        self.gamma = 0.99 # discount rate
+        self.gamma = 0.9 # discount rate
         self.tau = 0.01 # used when soft-updating target parameters
 
         # Score tracker and learning parameters
@@ -64,7 +64,7 @@ class Agent():
 
         self.best_w = None
         self.best_score = -np.inf
-        self.noise_scale = 0.1
+        self.noise_scale = 0.2
 
         self.reset_episode() # reset episode variables
 

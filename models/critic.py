@@ -26,20 +26,20 @@ class Value:
 		actions = Input((self.action_size,), name = 'actions')
 
 		# Hidden layers for state pathway
-		net_states = Dense(32, activation = 'relu')(states)
-		net_states = Dense(64, activation = 'relu')(net_states)
+		net_states = Dense(64, activation = 'relu')(states)
+		net_states = Dense(128, activation = 'relu')(net_states)
 
 		# Hidden layers for action pathway
-		net_actions = Dense(32, activation = 'relu')(actions)
-		net_actions = Dense(64, activation = 'relu')(net_actions)
+		net_actions = Dense(64, activation = 'relu')(actions)
+		net_actions = Dense(128, activation = 'relu')(net_actions)
 
 		# Combine state, action pathway
 		net = Add()([net_states, net_actions])
 		net = Activation('relu')(net)
 
 		# More layers here
+		net = Dense(128, activation = 'relu')(net)
 		net = Dense(64, activation = 'relu')(net)
-		net = Dense(32, activation = 'relu')(net)
 
 		# Add final output layer to produce action values (Q values)
 		Q_values = Dense(1, name = 'q_values')(net)
