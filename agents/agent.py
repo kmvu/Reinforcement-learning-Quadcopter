@@ -42,8 +42,8 @@ class Agent():
 
         # Add some noise components and process
         self.exploration_mu = 0.1
-        self.exploration_theta = 0.3
-        self.exploration_sigma = 0.25
+        self.exploration_theta = 0.25
+        self.exploration_sigma = 0.3
 
         self.noise = OUNoise(self.action_size, self.exploration_mu,
                              self.exploration_theta, self.exploration_sigma)
@@ -64,7 +64,7 @@ class Agent():
 
         self.best_w = None
         self.best_score = -np.inf
-        self.noise_scale = 0.2
+        self.noise_scale = 0.1
 
         self.reset_episode() # reset episode variables
 

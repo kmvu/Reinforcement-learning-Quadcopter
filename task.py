@@ -28,8 +28,14 @@ class Task():
 
     def get_reward(self):
         """Uses current pose of sim to return reward."""
-        reward = 1.-.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
-        return reward
+        current_pos_z = self.sim.pose[2]
+        target_pos_z = self.target_pos[2]
+        current_vel_z = self.sim.v[2]
+
+        distance_factor = abs(current_pos_z - target_pos_z) - current_vel_z
+        reward = 1.0 - 0.3 * (distance_factor)
+
+        return np.clip([reward], -1.0, 1.0)[0]
 
     def step(self, rotor_speeds):
         """Uses action to obtain next state, reward, done."""
@@ -38,6 +44,11 @@ class Task():
         for _ in range(self.action_repeat):
             done = self.sim.next_timestep(rotor_speeds) # update the sim pose and velocities
             reward += self.get_reward()
+
+            # Penalizing
+            if self.sim.time < self.sim.runtime and done:
+                reward = -1.0
+
             pose_all.append(self.sim.pose)
         next_state = np.concatenate(pose_all)
         return next_state, reward, done

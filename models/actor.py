@@ -30,9 +30,9 @@ class Policy:
 		states = Input((self.state_size,), name = 'states')
 
 		# Hidden layers
-		net = Dense(64, activation = 'relu')(states)
-		net = Dense(128, activation = 'relu')(net)
+		net = Dense(32, activation = 'relu')(states)
 		net = Dense(64, activation = 'relu')(net)
+		net = Dense(32, activation = 'relu')(net)
 
 		# Final output layer with sigmoid layer
 		raw_actions = Dense(self.action_size, activation = 'sigmoid', name = 'raw_actions')(net)
